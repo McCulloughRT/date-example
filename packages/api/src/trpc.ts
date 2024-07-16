@@ -61,7 +61,38 @@ export const createTRPCContext = async (opts: {
  * transformer
  */
 const t = initTRPC.context<typeof createTRPCContext>().create({
-  transformer: superjson,
+  transformer: {
+    input: {
+      serialize: (value) => {
+        console.log("superjson.input.serialize.original", value);
+        const v = superjson.serialize(value);
+        console.log("superjson.input.serialize.xformed", v);
+        return v;
+      },
+      deserialize: (value) => {
+        console.log("superjson.input.deserialize.original", value);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        const v = superjson.deserialize(value);
+        console.log("superjson.input.deserialize.xformed", v);
+        return v;
+      },
+    },
+    output: {
+      serialize: (value) => {
+        console.log("superjson.output.serialize.original", value);
+        const v = superjson.serialize(value);
+        console.log("superjson.output.serialize.xformed", v);
+        return v;
+      },
+      deserialize: (value) => {
+        console.log("superjson.output.deserialize.original", value);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        const v = superjson.deserialize(value);
+        console.log("superjson.output.deserialize.xformed", v);
+        return v;
+      },
+    },
+  },
   errorFormatter: ({ shape, error }) => ({
     ...shape,
     data: {
